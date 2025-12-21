@@ -16,22 +16,27 @@ The APK application is available as a GitLab release, and on [https://asustor.ca
 
 The APK application is not available as an Asustor App Central application as Asustor does not accept duplicates nor applications without a UI.
 
-
 ### Usage
 
 A brief usage guide can be found below. A more complete step-by-step guide is available on [https://blog.cappysan.dev](https://blog.cappysan.dev) in the Asustor section.
 
 
-### Application Installation <a name="installation"></a>
+### Installing
 
 - Download the APK file from Cappysan's Asustor website ([https://asustor.cappysan.dev/2025/12/03/certbot](https://asustor.cappysan.dev/2025/12/03/certbot)  
 - Install the package
 - A share folder named "Configuration" will be created. Configure it to only enable admins in read-write mode. Deny anonymous and user access.
 - Ensure you can modify files in the "Configuration/cerbot" with either SSH, a mount point, or the Asustor File Explorer.
+
+
+### Configuration
+
+Files within the `Configuration` shared folder can be modified via SSH or by exporting the shared folder through NFS, SMB, FTP, ...
+
 - In the "cerbot" folder, edit "domains.conf" with the domains to get a cert for. eg: "\*.example.com"
-- In the "cerbot" folder, edit "provider.conf" with the name of DNS validator you will use.
+- In the "cerbot" folder, edit "provider.conf" with the name of DNS validator you will use. You can use any other value as long as you create a cmdline for that provider.
 - In the "cerbot" folder, edit "credentials.conf" or "<provider>.conf"with credentials you will use. 
-- An optional "<provider>.cmdline.conf" file can be created to override the DNS specific certbot command line.
+- An optional "cmdline.conf" file can be created to override the DNS specific certbot command line.
 - De-activate and re-activate the application to generate the certificates;
 - Verify in the builtin syslog viewer on the NAS interface that certificate generation was a success, or not.
 - Download the "certificates.zip" from the certbot configuration folder,
@@ -62,7 +67,7 @@ Please refer to the upstream software documentation for details on their respect
 
 ## Links <a name="links"></a>
 
-  * Cappysan's Asustor home lab tutorial: [https://blog.cappysan.dev/asustor/index.html](https://blog.cappysan.dev/asustor/index.html)
+  * Cappysan's Asustor Tutorials & Procedures: [https://blog.cappysan.dev/asustor/index.html](https://blog.cappysan.dev/asustor/index.html)
   * Cappysan's Asustor applications website: [https://asustor.cappysan.dev/](https://asustor.cappysan.dev/)
   * GitLab: [https://gitlab.com/cappysan/asustor/certbot](https://gitlab.com/cappysan/asustor/certbot)
   * GitHub: [https://github.com/cappysan/asustor-certbot](https://github.com/cappysan/asustor-certbot)

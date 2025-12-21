@@ -7,7 +7,7 @@ answers:
   # File generated with mk-scaffold:
   #   cf. nitpick/scaffold-tpl-version-check.toml
   template_used: "https://gitlab.com/cappysan/scaffolds/asustor-template.git"
-  template_used_version: "1.1.0-r2"
+  template_used_version: "1.1.0-r4"
 
   author: "Julien Lecomte"
   email: "julien@cappysan.dev"
@@ -19,6 +19,7 @@ answers:
   project_url: "https://gitlab.com/cappysan/asustor/certbot"
   project_description: "Asustor Certbot DNS application"
   project_path: "asustor/certbot"
+  project_wp_url: "https://asustor.cappysan.dev/2025/12/03/certbot"
 
   has_documentation: False
   documentation_url: "https://example.com"
@@ -30,6 +31,13 @@ answers:
   has_releases: True
   has_changelog: True
 
+  user_name: "admin"
+  is_pipx: True
+  is_single_app: False
+  use_start_stop_daemon: False
+  has_port: True
+  has_adm_desktop: True
+
   license: "MIT"
   version: "5.2.2-r3"
   version_style: "semver-rev"
@@ -39,4 +47,4 @@ answers:
 
   # Hidden fields
   creation_year: "2025"
-  last_update: "2025-12-19 15:11:43"
+  last_update: "2025-12-27 16:47:08"

@@ -4,11 +4,10 @@
 # ------------------------------------------------------------------------------
 # Save variables
 APKG_PKG_DIR=/usr/local/AppCentral/${APKG_PKG_NAME}
-APKG_PKG_SHORT_NAME="${APKG_PKG_NAME#*-}"
 APKG_PKG_SHORT_VER="${APKG_PKG_VER%-*}"
-APKG_CFG_DIR=/share/Configuration/${APKG_PKG_SHORT_NAME}
-APKG_TAR_FILE=/tmp/${APKG_PKG_SHORT_NAME}.tar.xz
-export APKG_PKG_SHORT_NAME APKG_CFG_DIR APKG_PKG_VER APKG_PKG_SHORT_VER
+APKG_CFG_DIR=/share/Configuration/certbot
+APKG_TAR_FILE=/tmp/certbot.tar.xz
+export APKG_CFG_DIR APKG_PKG_VER APKG_PKG_SHORT_VER
 env | grep APKG | grep -v " " | sort > ${APKG_PKG_DIR}/.env.install
 
 # Ensure permissions are limited to root user for the application folder.
@@ -21,7 +20,6 @@ if test ! -d ${APKG_CFG_DIR}; then
   chmod 750 ${APKG_CFG_DIR}
 fi
 
-# ------------------------------------------------------------------------------
 # First, install a pipx application in a temporary folder
 pip3 install --target ${APKG_TEMP_DIR} --force-reinstall --no-warn-script-location --progress-bar off --root-user-action=ignore --upgrade pipx
 
@@ -49,16 +47,15 @@ pipx inject -f certbot certbot-dns-route53==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-sakuracloud==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-nginx==${APKG_PKG_VER%-*}
 
-
+# Copy deploy scripts, overwrite
+mkdir -p ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy
+cp -frv ${APKG_PKG_DIR}/renewal-hooks/deploy/* ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy/
 
 # Copy available configurations if they don't exist
 rsync -av --inplace --ignore-existing ${APKG_PKG_DIR}/conf.dist/ ${APKG_CFG_DIR}
-chown admin:root ${APKG_CFG_DIR}/*.conf
+chown -R admin:root ${APKG_CFG_DIR}
+chmod 750 ${APKG_CFG_DIR}
 chmod 600 ${APKG_CFG_DIR}/*.conf
-
-# Copy deploy scripts
-mkdir -p ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy
-cp -rv ${APKG_PKG_DIR}/renewal-hooks/deploy/* ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy/
 
 # Make backup of the crontab
 if test ! -f ${APKG_CFG_DIR}/crontab.$(date +%Y-%m-%d_%H%M).bak; then

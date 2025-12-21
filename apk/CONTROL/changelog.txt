@@ -1,6 +1,8 @@
 # Changelog
 
-Changes relevant to the users of Asustor Certbot APK are documented here.
+Changes relevant to the users of Cappysan's Asustor Certbot APK are documented here.
+
+This project adheres to [Semantic Versioning](https://semver.org/).
 
 ## 5.2.2-r4 - 2025-12-21
 
@@ -8,6 +10,7 @@ Changes relevant to the users of Asustor Certbot APK are documented here.
 
 - Improved error messages
 - Use full path of deploy-hooks
+- Use latest template
 
 
 ## 5.2.2-r3 - 2025-12-20
