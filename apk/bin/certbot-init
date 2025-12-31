@@ -17,13 +17,6 @@ if test ! -f "${APKG_CFG_DIR}/active"; then
   exit 0
 fi
 
-# For every renewal hook that we find, install it before deploy section.
-for as_hook in /usr/local/AppCentral/*/renewal-hooks/deploy/*; do
-  # Overwrite since it could be more recent,
-  # Use rsync to avoid a warning with `cp`
-  rsync -a "${as_hook}" /usr/local/AppCentral/cappysan-certbot/renewal-hooks/deploy/
-done
-
 if test -d /etc/letsencrypt; then
   rm -fr /etc/letsencrypt
 fi
@@ -37,23 +30,28 @@ provider="$(cat ${APKG_CFG_DIR}/provider.conf | xargs)"
 if test -f ${APKG_CFG_DIR}/cmdline.conf; then
   commandline="$(cat ${APKG_CFG_DIR}/cmdline.conf)"
 else
-  if test -f ${APKG_CFG_DIR}/credentials.conf; then
-    commandline="--dns-${provider} --dns-${provider}-credentials ${APKG_CFG_DIR}/credentials.conf"
-  else
+  if test -f "/share/Configuration/certbot/${provider}.conf"; then
     commandline="--dns-${provider} --dns-${provider}-credentials /share/Configuration/certbot/${provider}.conf"
+  else
+    commandline="--dns-${provider} --dns-${provider}-credentials ${APKG_CFG_DIR}/credentials.conf"
   fi
 fi
 
+${APKG_PKG_DIR}/bin/install-hooks
+
 logger "Requesting new certificate..."
 echo certbot certonly "${@}" ${commandline} -d "${domains} (...)" >&2
-if /usr/local/AppCentral/cappysan-certbot/bin/certbot certonly "${@}" --post-hook "run-parts $(pwd)/renewal-hooks/deploy/" \
+if /usr/local/AppCentral/cappysan-certbot/bin/certbot certonly "${@}" --deploy-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy/" \
     -n -m "${email}" --agree-tos ${commandline} \
     -d "${domains}" 2>&1 | tee /tmp/certbot.log; then
-
-  if grep -q 'no action taken.' /tmp/certbot.log; then
+  if grep -q 'Error determining' /tmp/certbot.log; then
+    logger "Requesting new certificate: Failure. Wrong credentials?"
+    exit 1
+  elif grep -q 'no action taken.' /tmp/certbot.log; then
     logger "Requesting new certificate: Certificate not due for renewal."
   elif grep -q 'unexpected error' /tmp/certbot.log; then
     logger "Requesting new certificate: Certificate generation error."
+    exit 1
   else
     logger "Requesting new certificate: Renewal success."
     date > ${APKG_CFG_DIR}/last_run

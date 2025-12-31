@@ -28,15 +28,12 @@ chmod 600 ${APKG_CFG_DIR}/*.conf
 
 # last_run records last success
 if test ! -f ${APKG_CFG_DIR}/last_run; then
+  echo "${APKG_CFG_DIR}/last_run does not exist, running init script" >&2
   exec /usr/local/AppCentral/cappysan-certbot/bin/certbot-init "${@}"
 fi
+echo "${APKG_CFG_DIR}/last_run exists, running renew script" >&2
 
-# For every renewal hook that we find, install it before deploy section.
-for as_hook in /usr/local/AppCentral/*/renewal-hooks/deploy/*; do
-  # Overwrite since it could be more recent,
-  # Use rsync to avoid a warning with `cp`
-  rsync -a "${as_hook}" /usr/local/AppCentral/cappysan-certbot/renewal-hooks/deploy/
-done
+${APKG_PKG_DIR}/bin/install-hooks
 
 logger "Requesting certificate renewal..."
 echo /usr/local/AppCentral/cappysan-certbot/bin/certbot renew --no-random-sleep-on-renew "${@}" >&2

@@ -8,9 +8,9 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
-- Improved error messages
-- Use full path of deploy-hooks
-- Use latest template
+- Improved scripts, including error messages
+- Moved renewal hooks to standardized path
+- Use a specific script ti install renewal hooks
 
 
 ## 5.2.2-r3 - 2025-12-20

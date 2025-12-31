@@ -47,10 +47,6 @@ pipx inject -f certbot certbot-dns-route53==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-sakuracloud==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-nginx==${APKG_PKG_VER%-*}
 
-# Copy deploy scripts, overwrite
-mkdir -p ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy
-cp -frv ${APKG_PKG_DIR}/renewal-hooks/deploy/* ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy/
-
 # Copy available configurations if they don't exist
 rsync -av --inplace --ignore-existing ${APKG_PKG_DIR}/conf.dist/ ${APKG_CFG_DIR}
 chown -R admin:root ${APKG_CFG_DIR}
