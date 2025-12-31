@@ -19,7 +19,7 @@ answers:
   project_url: "https://gitlab.com/cappysan/asustor/certbot"
   project_description: "Asustor Certbot DNS application"
   project_path: "asustor/certbot"
-  project_wp_url: "https://asustor.cappysan.dev/2025/12/03/certbot"
+  project_wp_url: "https://asustor.cappysan.dev/certbot"
 
   has_documentation: False
   documentation_url: "https://example.com"
@@ -28,18 +28,20 @@ answers:
 
   has_pages: False
   has_pages_on_main: False
-  has_releases: True
+  has_releases: False
   has_changelog: True
 
   user_name: "admin"
   is_pipx: True
   is_single_app: False
+  download_url: "https://example.com"
   use_start_stop_daemon: False
-  has_port: True
-  has_adm_desktop: True
+  has_port: False
+  has_adm_desktop: False
+  has_renewal_hook: False
 
   license: "MIT"
-  version: "5.2.2-r3"
+  version: "5.2.2-r4"
   version_style: "semver-rev"
 
   keep_placeholders: False
@@ -47,4 +49,4 @@ answers:
 
   # Hidden fields
   creation_year: "2025"
-  last_update: "2025-12-27 16:47:08"
+  last_update: "2026-03-02 16:28:32"

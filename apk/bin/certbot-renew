@@ -16,15 +16,9 @@ function logger() {
 }
 
 if test ! -f "${APKG_CFG_DIR}/active"; then
-  logger "Certbot certificates are deactivated."
+  logger "[Certbot] Certbot certificates are deactivated."
   exit 0
 fi
-
-# Always reset the permissions
-chown admin:root ${APKG_CFG_DIR}
-chmod 750 ${APKG_CFG_DIR}
-chown admin:root ${APKG_CFG_DIR}/*.conf
-chmod 600 ${APKG_CFG_DIR}/*.conf
 
 # last_run records last success
 if test ! -f ${APKG_CFG_DIR}/last_run; then
@@ -35,15 +29,15 @@ echo "${APKG_CFG_DIR}/last_run exists, running renew script" >&2
 
 ${APKG_PKG_DIR}/bin/install-hooks
 
-logger "Requesting certificate renewal..."
+logger "[Certbot] Requesting certificate renewal..."
 echo /usr/local/AppCentral/cappysan-certbot/bin/certbot renew --no-random-sleep-on-renew "${@}" >&2
 if /usr/local/AppCentral/cappysan-certbot/bin/certbot renew --no-random-sleep-on-renew "${@}" 2>&1 | tee /tmp/certbot.log ; then
   if grep -q 'Certificate not yet due for renewal' /tmp/certbot.log; then
-    logger "Rewewing certificate: Pass. Certificate not due for renewal."
+    logger "[Certbot] Rewewing certificate: Pass. Certificate not due for renewal."
   elif grep -q 'too many requests' /tmp/certbot.log; then
-    logger "Rewewing certificate: Failure. Too many requests."
+    logger "[Certbot] Rewewing certificate: Failure. Too many requests."
   else
-    logger "Renewing certificate: Success."
+    logger "[Certbot] Renewing certificate: Success."
     date > ${APKG_CFG_DIR}/last_run
   fi
 else

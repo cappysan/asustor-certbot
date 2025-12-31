@@ -10,10 +10,10 @@ function logger() {
   echo "${@}" >&2
   syslog --log 0 --level 0 --user SYSTEM --event "${@}"
 }
-logger "Initializing certbot certificates..."
+logger "[Certbot] Initializing certbot certificates..."
 
 if test ! -f "${APKG_CFG_DIR}/active"; then
-  logger "Certbot certificates are deactivated."
+  logger "[Certbot] Certbot certificates are deactivated."
   exit 0
 fi
 
@@ -39,21 +39,21 @@ fi
 
 ${APKG_PKG_DIR}/bin/install-hooks
 
-logger "Requesting new certificate..."
+logger "[Certbot] Requesting new certificate..."
 echo certbot certonly "${@}" ${commandline} -d "${domains} (...)" >&2
 if /usr/local/AppCentral/cappysan-certbot/bin/certbot certonly "${@}" --deploy-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy/" \
     -n -m "${email}" --agree-tos ${commandline} \
     -d "${domains}" 2>&1 | tee /tmp/certbot.log; then
   if grep -q 'Error determining' /tmp/certbot.log; then
-    logger "Requesting new certificate: Failure. Wrong credentials?"
+    logger "[Certbot] Requesting new certificate: Failure. Wrong credentials?"
     exit 1
   elif grep -q 'no action taken.' /tmp/certbot.log; then
-    logger "Requesting new certificate: Certificate not due for renewal."
+    logger "[Certbot] Requesting new certificate: Certificate not due for renewal."
   elif grep -q 'unexpected error' /tmp/certbot.log; then
-    logger "Requesting new certificate: Certificate generation error."
+    logger "[Certbot] Requesting new certificate: Certificate generation error."
     exit 1
   else
-    logger "Requesting new certificate: Renewal success."
+    logger "[Certbot] Requesting new certificate: Renewal success."
     date > ${APKG_CFG_DIR}/last_run
   fi
 else

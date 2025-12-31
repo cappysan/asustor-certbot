@@ -1,12 +1,11 @@
 #!/usr/bin/env sh
-# SPDX-License-Identifier: MIT
-
+#
+#
 . /usr/local/AppCentral/cappysan-certbot/.env.install
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
 
-mkdir -p ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy
-
-for as_hook in /usr/local/AppCentral/*/renewal-hooks.dist/*; do
-  # Use rsync to avoid a warning with `cp`
-  rsync -a --inplace --ignore-existing "${as_hook}" ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/
+mkdir -p ${APKG_CFG_DIR}/renewal-hooks/
+for as_dir in /usr/local/AppCentral/cappysan-*/renewal-hooks.dist; do
+  rsync -a --inplace --ignore-existing ${as_dir}/ \
+    ${APKG_CFG_DIR}/renewal-hooks/
 done

@@ -1,1 +1,0 @@
-/usr/local/AppCentral/cappysan-certbot/CONTROL/start-stop.sh
