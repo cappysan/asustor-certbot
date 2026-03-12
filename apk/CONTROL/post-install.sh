@@ -15,16 +15,14 @@ ${APKG_PKG_DIR}/CONTROL/common.sh
 # Install
 # =======
 
-# First, install a pipx application in a temporary folder
+# First, install pipx application in a temporary folder
 pip3 install --target ${APKG_TEMP_DIR} --force-reinstall --no-warn-script-location --progress-bar off --root-user-action=ignore --upgrade pipx || exit 1
-
-# Install the certbot application in the final destination folder
 _OLD_PATH=${PATH}
 PATH="${APKG_TEMP_DIR}/bin:${PATH}"
 
 # Install certbot and all dependencies
 export PYTHONPATH="${APKG_TEMP_DIR}"
-export PIPX_HOME=${APKG_PKG_DIR}
+export PIPX_HOME=${APKG_PKG_DIR}/letsencrypt
 export PIPX_BIN_DIR=${PIPX_HOME}/bin
 pipx install -f certbot==${APKG_PKG_VER%-*} || exit 1
 pipx inject -f certbot certbot-apache==${APKG_PKG_VER%-*}
@@ -57,7 +55,7 @@ cp -f ${APKG_PKG_DIR}/logrotate.d/cappysan-certbot /etc/logrotate.d/
 # Restart
 # =======
 if test -f "${APKG_CFG_DIR}/active"; then
-  ${APKG_PKG_DIR}/bin/certbot-renew
+  ${APKG_PKG_DIR}/CONTROL/start-stop.sh force-restart
 fi
 
 exit 0

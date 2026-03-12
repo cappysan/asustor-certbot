@@ -30,8 +30,8 @@ echo "${APKG_CFG_DIR}/last_run exists, running renew script" >&2
 ${APKG_PKG_DIR}/bin/install-hooks
 
 logger "[Certbot] Requesting certificate renewal..."
-echo /usr/local/AppCentral/cappysan-certbot/bin/certbot renew --no-random-sleep-on-renew "${@}" >&2
-if /usr/local/AppCentral/cappysan-certbot/bin/certbot renew --no-random-sleep-on-renew "${@}" 2>&1 | tee /tmp/certbot.log ; then
+echo /usr/local/AppCentral/cappysan-certbot/letsencrypt/bin/certbot renew --no-random-sleep-on-renew --pre-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/pre/" --post-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/post/" "${@}" >&2
+if /usr/local/AppCentral/cappysan-certbot/letsencrypt/bin/certbot renew --no-random-sleep-on-renew "${@}" --pre-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/pre/" --post-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/post/" 2>&1 | tee /tmp/certbot.log ; then
   if grep -q 'Certificate not yet due for renewal' /tmp/certbot.log; then
     logger "[Certbot] Rewewing certificate: Pass. Certificate not due for renewal."
   elif grep -q 'too many requests' /tmp/certbot.log; then

@@ -41,7 +41,7 @@ ${APKG_PKG_DIR}/bin/install-hooks
 
 logger "[Certbot] Requesting new certificate..."
 echo certbot certonly "${@}" ${commandline} -d "${domains} (...)" >&2
-if /usr/local/AppCentral/cappysan-certbot/bin/certbot certonly "${@}" --deploy-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy/" \
+if /usr/local/AppCentral/cappysan-certbot/letsencrypt/bin/certbot certonly "${@}" --deploy-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/deploy/" \
     -n -m "${email}" --agree-tos ${commandline} \
     -d "${domains}" 2>&1 | tee /tmp/certbot.log; then
   if grep -q 'Error determining' /tmp/certbot.log; then

@@ -4,13 +4,17 @@ Changes relevant to the users of Cappysan's Asustor Certbot APK are documented h
 
 This project adheres to [Semantic Versioning](https://semver.org/).
 
-## 5.2.2-r8 - 2026-03-12
+## 5.2.2-r9 - 2026-03-12
 
 ### Added
 
 - Logrotate the certbot logs
 - Add a reload option to restart only if already started
-- Run install hooks on installation
+
+### Changed
+
+- Made pipx package 'letsencrypt' instead of parent folder
+- Moved zip action from deploy to post
 
 
 ## 5.2.2-r5 - 2026-03-02
