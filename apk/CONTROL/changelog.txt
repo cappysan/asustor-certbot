@@ -4,10 +4,12 @@ Changes relevant to the users of Cappysan's Asustor Certbot APK are documented h
 
 This project adheres to [Semantic Versioning](https://semver.org/).
 
-## 5.2.2-r6 - 2026-03-02
+## 5.2.2-r8 - 2026-03-12
 
-### Changed
+### Added
 
+- Logrotate the certbot logs
+- Add a reload option to restart only if already started
 - Run install hooks on installation
 
 

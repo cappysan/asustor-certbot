@@ -49,6 +49,10 @@ pipx inject -f certbot certbot-nginx==${APKG_PKG_VER%-*}
 
 (crontab -l ; echo "0 */8 * * * ${APKG_PKG_DIR}/bin/certbot-renew") | sort | uniq | crontab -
 
+# Logrotate
+# =========
+# Enable logrotate
+cp -f ${APKG_PKG_DIR}/logrotate.d/cappysan-certbot /etc/logrotate.d/
 
 # Restart
 # =======
