@@ -6,7 +6,7 @@
 # ------------------------------------------------------------------------------
 [project]
 name = "cappysan-certbot"
-version = "5.2.2-r9"
+version = "5.2.2-r10"
 authors = [
   {name = "Julien Lecomte", email = "julien@cappysan.dev"}
 ]
@@ -24,7 +24,7 @@ Homepage = "https://gitlab.com/cappysan/asustor/certbot"
 # Other tools
 # ------------------------------------------------------------------------------
 [tool.bumpversion]
-current_version = "5.2.2-r9"
+current_version = "5.2.2-r10"
 
 parse = """(?x)
   (?P<major>0|[1-9]\\d*)\\.

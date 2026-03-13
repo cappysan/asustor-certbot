@@ -10,7 +10,7 @@ function logger() {
 }
 
 # Build the link since it's not present when we install
-ln -sf -T $(realpath ./bin/certbot) /usr/bin/certbot
+ln -sf -T $(realpath ./letsencrypt/bin/certbot) /usr/bin/certbot
 
 # Rebuild a link from /etc to this app configuration folder
 if test ! -e /etc/letsencrypt; then
@@ -24,14 +24,13 @@ case $1 in
   start)
     touch "${APKG_CFG_DIR}/active"
     logger "[Certbot] Starting certbot..."
+    ./bin/install-hooks
     ./bin/certbot-renew
     ;;
 
   stop)
-    if test -f "${APKG_CFG_DIR}/active"; then
-      rm -f "${APKG_CFG_DIR}/active"
-    fi
     logger "[Certbot] Stopping certbot..."
+    rm -f "${APKG_CFG_DIR}/active"
     ;;
 
   restart)
