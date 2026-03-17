@@ -22,9 +22,9 @@ export HOME=/share/Configuration/certbot
 
 case $1 in
   start)
-    touch "${APKG_CFG_DIR}/active"
     logger "[Certbot] Starting certbot..."
-    ./bin/install-hooks
+    touch "${APKG_CFG_DIR}/active"
+    ./CONTROL/install-hooks
     ./bin/certbot-renew
     ;;
 
@@ -39,6 +39,7 @@ case $1 in
     ;;
 
   reload)
+    logger "[Certbot] Reloading..."
     if test -f "${APKG_CFG_DIR}/active"; then
       ./CONTROL/start-stop.sh stop
       ./CONTROL/start-stop.sh start
@@ -46,9 +47,11 @@ case $1 in
     ;;
 
   force-restart)
+    logger "[Certbot] Restarting certbot [force]..."
     ./CONTROL/start-stop.sh stop
+    # Don't call start-stop.sh start because of flag
     touch "${APKG_CFG_DIR}/active"
-    logger "[Certbot] Starting certbot [force]..."
+    ./CONTROL/install-hooks
     ./bin/certbot-renew --force-renewal
     ;;
 

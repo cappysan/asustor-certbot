@@ -4,6 +4,14 @@ Changes relevant to the users of Cappysan's Asustor Certbot APK are documented h
 
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+
+## 5.2.2-r12 - 2026-03-17
+
+### Changed
+
+- Reorganize
+
+
 ## 5.2.2-r11 - 2026-03-13
 
 ### Changed

@@ -37,7 +37,7 @@ else
   fi
 fi
 
-${APKG_PKG_DIR}/bin/install-hooks
+${APKG_PKG_DIR}/CONTROL/install-hooks
 
 logger "[Certbot] Requesting new certificate..."
 echo certbot certonly "${@}" ${commandline} -d "${domains} (...)" >&2
