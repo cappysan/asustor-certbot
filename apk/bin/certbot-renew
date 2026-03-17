@@ -27,7 +27,7 @@ if test ! -f ${APKG_CFG_DIR}/last_run; then
 fi
 echo "${APKG_CFG_DIR}/last_run exists, running renew script" >&2
 
-${APKG_PKG_DIR}/CONTROL/install-hooks
+${APKG_PKG_DIR}/CONTROL/install-hooks.sh
 
 logger "[Certbot] Requesting certificate renewal..."
 echo /usr/local/AppCentral/cappysan-certbot/letsencrypt/bin/certbot renew --no-random-sleep-on-renew --pre-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/pre/" --post-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/post/" "${@}" >&2
