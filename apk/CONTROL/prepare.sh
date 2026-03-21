@@ -28,9 +28,6 @@ fi
 # =======
 mkdir ${APKG_CFG_DIR}/backups/
 as_date="$(date +%Y-%m-%d_%H%M)"
-if test ! -f ${APKG_CFG_DIR}/installed.json.${as_date}.bak; then
-  cp /usr/builtin/etc/appcentral/installed.json ${APKG_CFG_DIR}/backups/installed.json.${as_date}.bak
-fi
 if test ! -f ${APKG_CFG_DIR}/crontab.${as_date}.bak; then
   crontab -l > ${APKG_CFG_DIR}/backups/crontab.${as_date}.bak
 fi

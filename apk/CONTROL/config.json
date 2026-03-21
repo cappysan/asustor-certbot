@@ -24,7 +24,8 @@
       }
     ],
     "boot-priority": {
-      "start-order": 60,
+      "comment": "docker-ce start order is 65, and persistence is 60.",
+      "start-order": 55,
       "stop-order": 30
     }
   }
