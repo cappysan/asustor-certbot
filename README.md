@@ -20,31 +20,9 @@ The APK application is not available as an Asustor App Central application as As
 
 ## Usage <a name="usage"></a>
 
+In brief, modify the files in "/share/Configuration/certbot" to your liking and restart the service.
 
-### Installing
-
-- Download the APK file from Cappysan's Asustor website ([https://asustor.cappysan.dev/certbot](https://asustor.cappysan.dev/certbot)  
-- In AppCentral, "Management", "Manual Install", install the package.
-
-
-### Configuration
-
-Configuration of the package requires the ability to edit the files in the **Configuration** shared folder. A few methods that can be used to edit the files:
-
-- Using SSH, and modifying the files directly in the "/share/Configuration" folder.
-- Mounting the **Configuration** shared folder, either via NFS, SMB, or some other mount protocol.
-- Downloading, edition, and re-uploading the files via the internal "File Explorer"
-
-Once you are able to modify files in the **Configuration** shared folder, you must configure the following files:
-
-- In the "cerbot" folder, edit "domains.conf" with the domains to get a cert for. eg: "\*.example.com". Wildcard certificates are accepted.
-- In the "cerbot" folder, edit "provider.conf" with the name of DNS validator you will use. You can use any other value as long as you create a cmdline for that provider.
-- In the "cerbot" folder, edit "credentials.conf" or "<provider>.conf" with credentials you will use. 
-- An optional "cmdline.conf" file can be created to override the DNS specific certbot command line.
-- De-activate and re-activate the application to generate the certificates;
-- Verify in the builtin syslog viewer on the NAS interface that certificate generation was a success, or not.
-- Download the "certificates.zip" from the certbot configuration folder,
-- Add those certificates to the Certificate Manager and select this certificate as the default certificate.
+More documentation can be found at [https://blog.cappysan.dev/asustor/](https://blog.cappysan.dev/asustor/)
 
 
 ## Support & Sponsorship <a name="support"></a>
@@ -71,8 +49,8 @@ Please refer to the upstream software documentation for details on their respect
 
 ## Links <a name="links"></a>
 
-  * Cappysan's Asustor Tutorials & Procedures: [https://blog.cappysan.dev/asustor/index.html](https://blog.cappysan.dev/asustor/index.html)
-  * Cappysan's Asustor applications website: [https://asustor.cappysan.dev/](https://asustor.cappysan.dev/)
+  * Cappysan's Asustor Home Lab: [https://blog.cappysan.dev/asustor/](https://blog.cappysan.dev/asustor/)
+  * Cappysan's Asustor APKs: [https://asustor.cappysan.dev/](https://asustor.cappysan.dev/)
   * GitLab: [https://gitlab.com/cappysan/asustor/certbot](https://gitlab.com/cappysan/asustor/certbot)
   * GitHub: [https://github.com/cappysan/asustor-certbot](https://github.com/cappysan/asustor-certbot)
   * Discord: [https://discord.gg/SsY3CAdp4Q](https://discord.gg/SsY3CAdp4Q)
