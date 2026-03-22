@@ -19,8 +19,8 @@ APKG_GROUP=root
 # Don't overwrite user permissions if set manually
 if test ! -d ${APKG_CFG_DIR}; then
   mkdir -p ${APKG_CFG_DIR}
-chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}
-chmod 750 ${APKG_CFG_DIR}
+  chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}
+  chmod 750 ${APKG_CFG_DIR}
 fi
 
 

@@ -15,8 +15,8 @@ function logger() {
   syslog --log 0 --level 0 --user SYSTEM --event "${@}"
 }
 
-${APKG_PKG_DIR}/CONTROL/common.sh
-
+cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
+./CONTROL/prepare.sh
 
 # Install
 # =======
@@ -30,9 +30,11 @@ PATH="${APKG_TEMP_DIR}/bin:${PATH}"
 export PYTHONPATH="${APKG_TEMP_DIR}"
 export PIPX_HOME=${APKG_PKG_DIR}/letsencrypt
 export PIPX_BIN_DIR=${PIPX_HOME}/bin
-logger "[Certbot} Installing certbot..."
+
+logger "[Certbot] Installing certbot..."
 pipx install -f certbot==${APKG_PKG_VER%-*} || exit 1
-logger "[Certbot} Installing certbot plugins..."
+
+logger "[Certbot] Installing certbot plugins..."
 pipx inject -f certbot certbot-apache==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-cloudflare==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-digitalocean==${APKG_PKG_VER%-*}
@@ -52,11 +54,13 @@ pipx inject -f certbot certbot-nginx==${APKG_PKG_VER%-*}
 
 # Crontab
 # =======
-logger "[Certbot} Install crontab..."
+logger "[Certbot] Install crontab..."
 (crontab -l ; echo "0 */8 * * * ${APKG_PKG_DIR}/CONTROL/start-stop.sh reload") | sort | uniq | crontab -
+
 
 # Restart
 # =======
+# Force a restart to generate a certificate if possible.
 if test -f "${APKG_CFG_DIR}/active"; then
   ${APKG_PKG_DIR}/CONTROL/start-stop.sh force-restart
 fi

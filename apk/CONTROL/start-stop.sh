@@ -24,8 +24,8 @@ case $1 in
   start)
     logger "[Certbot] Starting certbot..."
     touch "${APKG_CFG_DIR}/active"
-    ./CONTROL/install-hooks.sh
-    ./bin/certbot-renew
+    ./CONTROL/start.sh
+    ./CONTROL/certbot-renew
     ;;
 
   stop)
@@ -49,10 +49,9 @@ case $1 in
   force-restart)
     logger "[Certbot] Restarting certbot [force]..."
     ./CONTROL/start-stop.sh stop
-    # Don't call start-stop.sh start because of flag
     touch "${APKG_CFG_DIR}/active"
-    ./CONTROL/install-hooks.sh
-    ./bin/certbot-renew --force-renewal
+    ./CONTROL/start.sh
+    ./CONTROL/certbot-renew --force-renewal
     ;;
 
   *)
