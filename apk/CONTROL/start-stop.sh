@@ -1,13 +1,12 @@
 #!/usr/bin/env sh
 # SPDX-License-Identifier: MIT
 #
+# "start" just means creating the "active" file, and maybe recreate the cert
+# We leave it to the crontab to renew via certbot-renew if active file is present.
+#
 . /usr/local/AppCentral/cappysan-certbot/.env.install
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
-
-function logger() {
-  echo "${@}" >&2
-  syslog --log 0 --level 0 --user SYSTEM --event "${@}"
-}
+. ${APKG_PKG_DIR}/env
 
 # Build the link since it's not present when we install
 ln -sf -T $(realpath ./letsencrypt/bin/certbot) /usr/bin/certbot
@@ -18,19 +17,17 @@ if test ! -e /etc/letsencrypt; then
   ln -sf -T ${APKG_CFG_DIR}/letsencrypt /etc/letsencrypt
 fi
 
-export HOME=/share/Configuration/certbot
-
 case $1 in
   start)
     logger "[Certbot] Starting certbot..."
-    touch "${APKG_CFG_DIR}/active"
-    ./CONTROL/start.sh
+    touch "${APKG_PKG_DIR}/active"
+    ./CONTROL/start-hook.sh
     ./CONTROL/certbot-renew
     ;;
 
   stop)
     logger "[Certbot] Stopping certbot..."
-    rm -f "${APKG_CFG_DIR}/active"
+    rm -f "${APKG_PKG_DIR}/active"
     ;;
 
   restart)
@@ -39,18 +36,15 @@ case $1 in
     ;;
 
   reload)
-    logger "[Certbot] Reloading..."
-    if test -f "${APKG_CFG_DIR}/active"; then
-      ./CONTROL/start-stop.sh stop
+    if test -f "${APKG_PKG_DIR}/active"; then
       ./CONTROL/start-stop.sh start
     fi
     ;;
 
   force-restart)
     logger "[Certbot] Restarting certbot [force]..."
-    ./CONTROL/start-stop.sh stop
-    touch "${APKG_CFG_DIR}/active"
-    ./CONTROL/start.sh
+    touch "${APKG_PKG_DIR}/active"
+    ./CONTROL/start-hook.sh
     ./CONTROL/certbot-renew --force-renewal
     ;;
 

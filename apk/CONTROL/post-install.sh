@@ -10,13 +10,46 @@ export APKG_CFG_DIR APKG_PKG_VER APKG_PKG_SHORT_VER
 env | grep APKG | grep -v APKG_PKG_STATUS \
   | grep -v " " | sort > ${APKG_PKG_DIR}/.env.install
 
-function logger() {
-  echo "${@}" >&2
-  syslog --log 0 --level 0 --user SYSTEM --event "${@}"
-}
-
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
-./CONTROL/prepare.sh
+. ${APKG_PKG_DIR}/env
+
+# Permissions
+# ===========
+# Ensure permissions are limited to root user for the application folder.
+chown -R root:root ${APKG_PKG_DIR}
+
+
+# User
+# ====
+useradd --system --no-create-home --home-dir ${APKG_CFG_DIR}/ --gid nogroup --shell /bin/false ${APKG_USER}
+
+
+# Configuration folder
+# ====================
+# Don't overwrite user permissions if set manually
+if test ! -d ${APKG_CFG_DIR}; then
+  mkdir -p ${APKG_CFG_DIR}
+  chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}
+  chmod 750 ${APKG_CFG_DIR}
+fi
+
+
+# Backups
+# =======
+mkdir ${APKG_CFG_DIR}/.backups/
+as_date="$(date +%Y-%m-%d_%H%M)"
+if test ! -f ${APKG_CFG_DIR}/crontab.${as_date}.bak; then
+  crontab -l > ${APKG_CFG_DIR}/.backups/crontab.${as_date}.bak
+fi
+chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}/.backups
+
+
+# Configuration
+# =============
+# Don't override files that could have been user modified.
+rsync -a --inplace --ignore-existing ${APKG_PKG_DIR}/conf.dist/ ${APKG_CFG_DIR}
+chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}/*
+
 
 # Install
 # =======
@@ -38,31 +71,35 @@ logger "[Certbot] Installing certbot plugins..."
 pipx inject -f certbot certbot-apache==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-cloudflare==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-digitalocean==${APKG_PKG_VER%-*}
+logger "[Certbot] Installing certbot plugins [20%]..."
 pipx inject -f certbot certbot-dns-dnsimple==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-dnsmadeeasy==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-gehirn==${APKG_PKG_VER%-*}
+logger "[Certbot] Installing certbot plugins [40%]..."
 pipx inject -f certbot certbot-dns-google==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-linode==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-luadns==${APKG_PKG_VER%-*}
+logger "[Certbot] Installing certbot plugins [60%]..."
 pipx inject -f certbot certbot-dns-nsone==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-ovh==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-rfc2136==${APKG_PKG_VER%-*}
+logger "[Certbot] Installing certbot plugins [80%]..."
 pipx inject -f certbot certbot-dns-route53==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-sakuracloud==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-nginx==${APKG_PKG_VER%-*}
+logger "[Certbot] Installing certbot plugins [100%]..."
 
 
 # Crontab
 # =======
-logger "[Certbot] Install crontab..."
+logger "[Certbot] Installing crontab..."
 (crontab -l ; echo "0 */8 * * * ${APKG_PKG_DIR}/CONTROL/start-stop.sh reload") | sort | uniq | crontab -
 
 
 # Restart
 # =======
 # Force a restart to generate a certificate if possible.
-if test -f "${APKG_CFG_DIR}/active"; then
-  ${APKG_PKG_DIR}/CONTROL/start-stop.sh force-restart
-fi
+${APKG_PKG_DIR}/CONTROL/start-stop.sh force-restart
 
+logger "[Certbot] Application installed."
 exit 0

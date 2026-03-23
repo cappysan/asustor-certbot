@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# SPDX-License-Identifier: MIT
 #
 # The shell variable $RENEWED_LINEAGE will point to the config live subdirectory,
 # (eg: "/etc/letsencrypt/live/example.com") containing the new certificates and
@@ -8,13 +9,10 @@
 #
 # To run without renewing:
 #
-# RENEWED_LINEAGE=/etc/letsencrypt/live/example.com /etc/letsencrypt/renewal-hooks/deploy/lighthttpd
+# RENEWED_LINEAGE=/etc/letsencrypt/live/example.com /etc/letsencrypt/renewal-hooks/deploy/00-certificates
 #
 # To obtain the first RENEWED_LINEAGE:
 #   export RENEWED_LINEAGE=/etc/letsencrypt/live/$(certbot certificates 2>/dev/null | grep "Certificate Name:" | head -1 | cut -d":" -f2 | xargs)
-#
-# lighthttpd is the webserver used to serve the Asustor admin pages.
-# It is located: /usr/etc/lighttpd
 #
 # The certificates are in: /share/Configuration/certbot/letsencrypt/live/
 # and are copied in a convulated way in /usr/builtin/etc/certificate/
@@ -24,30 +22,20 @@
 # and a UUID that points to
 #   /usr/builtin/etc/certificate/ssl/{UUID}/
 #
-function logger() {
-  echo "${@}" >&2
-  syslog --log 0 --level 0 --user SYSTEM --event "${@}"
-}
-
-logger "[Certbot] Running renewal-hooks..."
-
 . /usr/local/AppCentral/cappysan-certbot/.env.install
 cd ${APKG_CFG_DIR:-/nonexistent} || exit 1
+. ${APKG_PKG_DIR}/env
 
 if test "x${RENEWED_LINEAGE}" == "x"; then
-   RENEWED_LINEAGE=/etc/letsencrypt/live/$(certbot certificates 2>/dev/null | grep "Certificate Name:" | head -1 | cut -d":" -f2 | xargs)
-   echo RENEWED_LINEAGE=$RENEWED_LINEAGE
-fi
-
-if test "x${RENEWED_LINEAGE}" == "x"; then
-  logger "[Certbot] Skipping, RENEWED_LINEAGE is not set"
+  logger "[Certbot] Skipping 00-certificates hook, RENEWED_LINEAGE is not set"
   exit 1
-elif test -e ${RENEWED_LINEAGE}/privkey.pem; then
+elif test -e "${RENEWED_LINEAGE}"/privkey.pem; then
   true
 else
-  logger "[Certbot] No Let's Encrypt certificate found: ${RENEWED_LINEAGE}"
+  logger "[Certbot] Skipping 00-certificates hook, no Let's Encrypt certificate found for: ${RENEWED_LINEAGE}"
   exit 1
 fi
+logger "[Certbot] Running 00-certificates hook..."
 
 # We need openssl
 export PATH=$PATH:/usr/builtin/bin/
@@ -61,7 +49,7 @@ fi
 as_src="$(openssl x509 -noout -text -in "${RENEWED_LINEAGE}"/cert.pem | grep "Subject:" | head -1)"
 as_dst="$(openssl x509 -noout -text -in /usr/builtin/etc/certificate/ssl.crt | grep "Subject:" | head -1)"
 if test "x${as_src}" != "x${as_dst}"; then
-  logger "[Certbot] Let's Encrypt certificate not installed."
+  logger "[Certbot] Let's Encrypt certificate are not installed."
   exit 2
 fi
 

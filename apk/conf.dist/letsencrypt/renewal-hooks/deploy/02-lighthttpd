@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
+# SPDX-License-Identifier: MIT
+#
+. /usr/local/AppCentral/cappysan-certbot/.env.install
+cd ${APKG_CFG_DIR:-/nonexistent} || exit 1
+. ${APKG_PKG_DIR}/env
 
 WHAT=lighthttpd
-
-if test "x${RENEWED_LINEAGE}" == "x"; then
-   RENEWED_LINEAGE=/etc/letsencrypt/live/$(certbot certificates 2>/dev/null | grep "Certificate Name:" | head -1 | cut -d":" -f2 | xargs)
-   echo RENEWED_LINEAGE=$RENEWED_LINEAGE
-fi
 
 # We need openssl
 export PATH=$PATH:/usr/builtin/bin/
@@ -17,18 +17,18 @@ function logger() {
 
 # If issuer is Asustor, then our certificates are not installed
 if test "x${RENEWED_LINEAGE}" == "x"; then
-  logger "[Certbot] Skipping ${WHAT} restart, RENEWED_LINEAGE is not set"
+  logger "[Certbot] Skipping 01-lighthttpd hook, RENEWED_LINEAGE is not set"
   exit 1
 elif openssl x509 -noout -text -in  /usr/builtin/etc/certificate/ssl.crt | grep Issuer | grep -q Asustor; then
-  logger "[Certbot] Certificate is from Asustor, not restarting ${WHAT}"
+  logger "[Certbot] Skipping 01-lighthttpd hook, certificate is from Asustor, not restarting ${WHAT}"
   exit 1
 elif test ! -f "${RENEWED_LINEAGE}"/cert.pem; then
-  logger "[Certbot] Certificates not found in ${RENEWED_LINEAGE}, not restarting ${WHAT}"
+  logger "[Certbot] Skipping 01-lighthttpd hook, Certificates not found in ${RENEWED_LINEAGE}, not restarting ${WHAT}"
   exit 1
 elif openssl x509 -noout -text -in "${RENEWED_LINEAGE}"/cert.pem | grep Issuer | grep -q "Let's Encrypt"; then
   true
 else
-  logger "[Certbot] Certificate is neither from Asustor nor Let's Encrypt, not restarting ${WHAT}"
+  logger "[Certbot] Skipping 01-lighthttpd hook, certificate is neither from Asustor nor Let's Encrypt, not restarting ${WHAT}"
   exit 1
 fi
 

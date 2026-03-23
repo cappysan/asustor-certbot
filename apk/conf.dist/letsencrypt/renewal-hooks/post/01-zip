@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# SPDX-License-Identifier: MIT
 #
 # The shell variable $RENEWED_LINEAGE will point to the config live subdirectory,
 # (eg: "/etc/letsencrypt/live/example.com") containing the new certificates and
@@ -6,26 +7,25 @@
 # The shell variable $RENEWED_DOMAINS will contain a space-delimited list
 # of renewed certificate domains.
 #
-
 . /usr/local/AppCentral/cappysan-certbot/.env.install
 cd ${APKG_CFG_DIR:-/nonexistent} || exit 1
+. ${APKG_PKG_DIR}/env
 
 if test "x${RENEWED_LINEAGE}" == "x"; then
-   RENEWED_LINEAGE=/etc/letsencrypt/live/$(certbot certificates 2>/dev/null | grep "Certificate Name:" | head -1 | cut -d":" -f2 | xargs)
-   echo RENEWED_LINEAGE=$RENEWED_LINEAGE
-fi
-
-if test "x${RENEWED_LINEAGE}" == "x"; then
-  echo "Skipping, RENEWED_LINEAGE is not set" >&2
+  logger "[Certbot] Skipping 01-zip hook, RENEWED_LINEAGE is not set"
   exit 1
-elif test ! -e "${RENEWED_LINEAGE}"/privkey.pem; then
-  echo "Skipping, keys not found in ${RENEWED_LINEAGE} directory" >&2
+elif test -e "${RENEWED_LINEAGE}"/privkey.pem; then
+  true
+else
+  logger "[Certbot] Skipping 01-zip hook, no Let's Encrypt certificate found for: ${RENEWED_LINEAGE}"
   exit 1
 fi
+logger "[Certbot] Running 01-zip hook..."
 
 # We need zip
 export PATH=$PATH:/usr/builtin/bin/
 
+# Zip the keys, and add last_run if the latter exists
 rm -f ${APKG_CFG_DIR}/certificates.zip 2>/dev/null
 if test -f last_run; then
   zip ${APKG_CFG_DIR}/certificates.zip last_run
@@ -35,4 +35,5 @@ fi
 chown admin:root ${APKG_CFG_DIR}/certificates.zip
 chmod 640 ${APKG_CFG_DIR}/certificates.zip
 
+logger "[Certbot] Generated zip file"
 exit 0
