@@ -12,15 +12,15 @@ cd ${APKG_CFG_DIR:-/nonexistent} || exit 1
 . ${APKG_PKG_DIR}/env
 
 if test "x${RENEWED_LINEAGE}" == "x"; then
-  logger "[Certbot] Skipping 01-zip hook, RENEWED_LINEAGE is not set"
+  logger "[${WHAT}] Skipping 01-zip hook, RENEWED_LINEAGE is not set"
   exit 1
 elif test -e "${RENEWED_LINEAGE}"/privkey.pem; then
   true
 else
-  logger "[Certbot] Skipping 01-zip hook, no Let's Encrypt certificate found for: ${RENEWED_LINEAGE}"
+  logger "[${WHAT}] Skipping 01-zip hook, no Let's Encrypt certificate found for: ${RENEWED_LINEAGE}"
   exit 1
 fi
-logger "[Certbot] Running 01-zip hook..."
+logger "[${WHAT}] Running 01-zip hook..."
 
 # We need zip
 export PATH=$PATH:/usr/builtin/bin/
@@ -35,5 +35,5 @@ fi
 chown admin:root ${APKG_CFG_DIR}/certificates.zip
 chmod 640 ${APKG_CFG_DIR}/certificates.zip
 
-logger "[Certbot] Generated zip file"
+logger "[${WHAT}] Generated zip file"
 exit 0

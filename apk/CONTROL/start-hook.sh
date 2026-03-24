@@ -29,7 +29,7 @@ done
 # ===========
 # Ensure some permission limits on the files that may contain some tokens
 for as_file in credentials cloudflare digitalocean dnsimple dnsmadeeasy gehirn google linode luadns nsone ovh rfc2136 route53 sakuracloud; do
-  chmod -f 640 ${APKG_CFG_DIR}/${as_file}.conf >/dev/null 2>&1
+  chmod -f 600 ${APKG_CFG_DIR}/${as_file}.conf >/dev/null 2>&1
 done
 
 exit 0

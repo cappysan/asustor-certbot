@@ -5,35 +5,28 @@
 cd ${APKG_CFG_DIR:-/nonexistent} || exit 1
 . ${APKG_PKG_DIR}/env
 
-WHAT=lighthttpd
-
 # We need openssl
 export PATH=$PATH:/usr/builtin/bin/
 
-function logger() {
-  echo "${@}" >&2
-  syslog --log 0 --level 0 --user SYSTEM --event "${@}"
-}
-
 # If issuer is Asustor, then our certificates are not installed
 if test "x${RENEWED_LINEAGE}" == "x"; then
-  logger "[Certbot] Skipping 01-lighthttpd hook, RENEWED_LINEAGE is not set"
+  logger "[${WHAT}] Skipping 01-lighthttpd hook, RENEWED_LINEAGE is not set"
   exit 1
 elif openssl x509 -noout -text -in  /usr/builtin/etc/certificate/ssl.crt | grep Issuer | grep -q Asustor; then
-  logger "[Certbot] Skipping 01-lighthttpd hook, certificate is from Asustor, not restarting ${WHAT}"
+  logger "[${WHAT}] Skipping 01-lighthttpd hook, certificate is from Asustor, not restarting ${WHAT}"
   exit 1
 elif test ! -f "${RENEWED_LINEAGE}"/cert.pem; then
-  logger "[Certbot] Skipping 01-lighthttpd hook, Certificates not found in ${RENEWED_LINEAGE}, not restarting ${WHAT}"
+  logger "[${WHAT}] Skipping 01-lighthttpd hook, Certificates not found in ${RENEWED_LINEAGE}, not restarting lighttpd"
   exit 1
 elif openssl x509 -noout -text -in "${RENEWED_LINEAGE}"/cert.pem | grep Issuer | grep -q "Let's Encrypt"; then
   true
 else
-  logger "[Certbot] Skipping 01-lighthttpd hook, certificate is neither from Asustor nor Let's Encrypt, not restarting ${WHAT}"
+  logger "[${WHAT}] Skipping 01-lighthttpd hook, certificate is neither from Asustor nor Let's Encrypt, not restarting lighttpd"
   exit 1
 fi
 
 if test -f /etc/init.d/S41lighttpd; then
-  logger "[Certbot] Restarting ${WHAT}..."
+  logger "[${WHAT}] Restarting lighttpd..."
   /etc/init.d/S41lighttpd restart
 fi
 exit 0

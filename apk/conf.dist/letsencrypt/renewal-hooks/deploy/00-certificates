@@ -27,29 +27,29 @@ cd ${APKG_CFG_DIR:-/nonexistent} || exit 1
 . ${APKG_PKG_DIR}/env
 
 if test "x${RENEWED_LINEAGE}" == "x"; then
-  logger "[Certbot] Skipping 00-certificates hook, RENEWED_LINEAGE is not set"
+  logger "[${WHAT}] Skipping 00-certificates hook, RENEWED_LINEAGE is not set"
   exit 1
 elif test -e "${RENEWED_LINEAGE}"/privkey.pem; then
   true
 else
-  logger "[Certbot] Skipping 00-certificates hook, no Let's Encrypt certificate found for: ${RENEWED_LINEAGE}"
+  logger "[${WHAT}] Skipping 00-certificates hook, no Let's Encrypt certificate found for: ${RENEWED_LINEAGE}"
   exit 1
 fi
-logger "[Certbot] Running 00-certificates hook..."
+logger "[${WHAT}] Running 00-certificates hook..."
 
 # We need openssl
 export PATH=$PATH:/usr/builtin/bin/
 
 # If issuer is Asustor, then our certificates are not installed
 if openssl x509 -noout -text -in  /usr/builtin/etc/certificate/ssl.crt | grep Issuer | grep -q Asustor; then
-  logger "[Certbot] Not replacing stock Asustor certificate."
+  logger "[${WHAT}] Not replacing stock Asustor certificate."
   exit 2
 fi
 # Compare "${RENEWED_LINEAGE}"/cert.pem and /usr/builtin/etc/certificate/ssl.crt
 as_src="$(openssl x509 -noout -text -in "${RENEWED_LINEAGE}"/cert.pem | grep "Subject:" | head -1)"
 as_dst="$(openssl x509 -noout -text -in /usr/builtin/etc/certificate/ssl.crt | grep "Subject:" | head -1)"
 if test "x${as_src}" != "x${as_dst}"; then
-  logger "[Certbot] Let's Encrypt certificate are not installed."
+  logger "[${WHAT}] Let's Encrypt certificate are not installed."
   exit 2
 fi
 
@@ -61,6 +61,6 @@ cat /usr/builtin/etc/certificate/ssl.key /usr/builtin/etc/certificate/ssl.crt /u
 chmod 644 /usr/builtin/etc/certificate/ssl.crt /usr/builtin/etc/certificate/chain.crt
 chmod 600 /usr/builtin/etc/certificate/ssl.key /usr/builtin/etc/certificate/ssl.pem
 chown root:root /usr/builtin/etc/certificate/ssl.*
-logger "[Certbot] Let's Encrypt certificate refreshed."
+logger "[${WHAT}] Let's Encrypt certificate refreshed."
 
 exit 0

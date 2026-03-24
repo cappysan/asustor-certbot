@@ -19,14 +19,14 @@ fi
 
 case $1 in
   start)
-    logger "[Certbot] Starting certbot..."
+    logger "[${WHAT}] Starting certbot..."
     touch "${APKG_PKG_DIR}/active"
     ./CONTROL/start-hook.sh
     ./CONTROL/certbot-renew
     ;;
 
   stop)
-    logger "[Certbot] Stopping certbot..."
+    logger "[${WHAT}] Stopping certbot..."
     rm -f "${APKG_PKG_DIR}/active"
     ;;
 
@@ -38,6 +38,17 @@ case $1 in
   reload)
     if test -f "${APKG_PKG_DIR}/active"; then
       ./CONTROL/start-stop.sh start
+    else
+      logger "[${WHAT}] Service is stopped, cannot reload."
+    fi
+    ;;
+
+  force-reload)
+    if test -f "${APKG_PKG_DIR}/active"; then
+      ./CONTROL/start-hook.sh
+      ./CONTROL/certbot-renew --force-renewal
+    else
+      logger "[${WHAT}] Service is stopped, cannot reload."
     fi
     ;;
 
@@ -49,9 +60,9 @@ case $1 in
     ;;
 
   *)
-    echo "usage: $0 {start|stop|restart|force-restart|reload}"
+    echo "usage: $0 {start|stop|restart|force-restart|force-reload|reload}"
     exit 1
     ;;
-
 esac
+
 exit 0
