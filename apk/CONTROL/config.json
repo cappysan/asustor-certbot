@@ -12,7 +12,7 @@
     "maintainer": "Cappysan",
     "name": "Certbot",
     "package": "cappysan-certbot",
-    "version": "5.2.2-r23",
+    "version": "5.2.2-r24",
     "developer": "ISRG",
     "website": "https://gitlab.com/cappysan/asustor/certbot"
   },
