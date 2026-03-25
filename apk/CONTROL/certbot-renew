@@ -16,6 +16,11 @@ if test ! -f "${APKG_PKG_DIR}/active"; then
   exit 0
 fi
 
+if test "$x{CERTBOT_RELOAD}" == "x0"; then
+  logger "[${WHAT}] Not reloading, CERTBOT_RELOAD is set to false."
+  exit 0
+fi
+
 # last_run records last success
 if test ! -f ${APKG_CFG_DIR}/last_run; then
   echo "${APKG_CFG_DIR}/last_run does not exist, running init script" >&2

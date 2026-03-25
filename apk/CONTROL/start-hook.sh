@@ -19,8 +19,7 @@ cp -f ${APKG_CFG_DIR}/deps.d/logrotate.d/* /etc/logrotate.d/
 mkdir -p ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/
 for as_dir in /usr/local/AppCentral/cappysan-*/deps.d/certbot/renewal-hooks/; do
   if test -d "${as_dir}"; then
-    rsync -a --inplace --ignore-existing ${as_dir}/ \
-      ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/
+    rsync -a --inplace ${as_dir}/ ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/
   fi
 done
 
