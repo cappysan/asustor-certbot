@@ -16,7 +16,7 @@ if test ! -f "${APKG_PKG_DIR}/active"; then
   exit 0
 fi
 
-if test "$x{CERTBOT_RELOAD}" == "x0"; then
+if test "x${CERTBOT_RELOAD}" == "x0"; then
   logger "[${WHAT}] Not reloading, CERTBOT_RELOAD is set to false."
   exit 0
 fi
