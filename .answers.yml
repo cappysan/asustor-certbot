@@ -41,7 +41,7 @@ answers:
   has_renewal_hook: False
 
   license: "MIT"
-  version: "5.2.2-r27"
+  version: "5.2.2-r28"
   version_style: "semver-rev"
 
   keep_placeholders: False
