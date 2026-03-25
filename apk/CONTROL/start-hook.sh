@@ -22,6 +22,11 @@ for as_dir in /usr/local/AppCentral/cappysan-*/deps.d/certbot/renewal-hooks/; do
     rsync -a --inplace ${as_dir}/ ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/
   fi
 done
+for as_dir in /share/Configuration/*/deps.d/certbot/renewal-hooks/; do
+  if test -d "${as_dir}"; then
+    rsync -a --inplace --ignore-existing ${as_dir}/ ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/
+  fi
+done
 
 
 # Permissions

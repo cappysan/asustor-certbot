@@ -4,12 +4,13 @@ Changes relevant to the users of Cappysan's Asustor Certbot APK are documented h
 
 This project adheres to [Semantic Versioning](https://semver.org/).
 
-## 5.2.2-r27 - 2026-03-25
+## 5.2.2-r28 - 2026-03-25
 
 ### Changed
 
 - Files in apk/deps.d will overwrite previous versions
-- Do not try to get certificate if CERTBOT_RELOAD is set to 0
+- Do not try to get certificate if `CERTBOT_RELOAD` is set to 0
+- Copy files from {PKG}/deps.d with overwrite, and {CFG}/deps.d without
 
 
 ## 5.2.2-r24 - 2026-03-25
