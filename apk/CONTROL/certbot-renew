@@ -12,7 +12,7 @@ cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
 . ${APKG_PKG_DIR}/env
 
 if test ! -f "${APKG_PKG_DIR}/active"; then
-  logger "[Certbot] Skipping certbot-renew, certbot service is not running."
+  logger "[${WHAT}] Skipping certbot-renew, certbot service is not running."
   exit 0
 fi
 
@@ -32,16 +32,16 @@ logger "[Certbot] Requesting certificate renewal..."
 echo ${APKG_PKG_DIR}/letsencrypt/bin/certbot renew --no-random-sleep-on-renew --pre-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/pre/" --post-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/post/" "${@}" >&2
 if ${APKG_PKG_DIR}/letsencrypt/bin/certbot renew --no-random-sleep-on-renew "${@}" --pre-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/pre/" --post-hook "run-parts ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/post/" 2>&1 | tee /tmp/certbot.log ; then
   if grep -q 'Certificate not yet due for renewal' /tmp/certbot.log; then
-    logger "[Certbot] Rewewing certificate: Pass. Certificate not due for renewal."
+    logger "[${WHAT}] Rewewing certificate: Pass. Certificate not due for renewal."
   elif grep -q 'too many requests' /tmp/certbot.log; then
-    logger "[Certbot] Rewewing certificate: Failure. Too many requests."
+    logger "[${WHAT}] Rewewing certificate: Failure. Too many requests."
   elif grep -q 'No renewals were attempted.' /tmp/certbot.log; then
-    logger "[Certbot] Rewewing certificate: Pass. No renewals were attempted."
+    logger "[${WHAT}] Rewewing certificate: Pass. No renewals were attempted."
   else
-    logger "[Certbot] Renewing certificate: Success."
+    logger "[${WHAT}] Renewing certificate: Success."
     date > ${APKG_CFG_DIR}/last_run
   fi
 else
   echo "${@}" >&2
-  syslog --log 0 --level 1 --user SYSTEM --event "Renewing certificate: Failure"
+  syslog --log 0 --level 1 --user SYSTEM --event "[${WHAT}] Renewing certificate: Failure"
 fi
