@@ -15,8 +15,6 @@ Asustor APK package for Certbot, the free, open source software tool certificate
 
 The APK application is available as a GitLab release, and on [https://asustor.cappysan.dev/](https://asustor.cappysan.dev/)
 
-The APK application is not available as an Asustor App Central application as Asustor does not accept duplicates nor applications without a UI.
-
 
 ## Usage <a name="usage"></a>
 
