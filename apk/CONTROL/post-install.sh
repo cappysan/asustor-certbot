@@ -66,25 +66,9 @@ pipx install -f certbot==${APKG_PKG_VER%-*} || exit 1
 
 logger "[${WHAT}] Installing certbot plugins..."
 pipx inject -f certbot certbot-apache==${APKG_PKG_VER%-*}
-pipx inject -f certbot certbot-dns-cloudflare==${APKG_PKG_VER%-*}
-pipx inject -f certbot certbot-dns-digitalocean==${APKG_PKG_VER%-*}
-logger "[${WHAT}] Installing certbot plugins [20%]..."
-pipx inject -f certbot certbot-dns-dnsimple==${APKG_PKG_VER%-*}
-pipx inject -f certbot certbot-dns-dnsmadeeasy==${APKG_PKG_VER%-*}
-pipx inject -f certbot certbot-dns-gehirn==${APKG_PKG_VER%-*}
-logger "[${WHAT}] Installing certbot plugins [40%]..."
-pipx inject -f certbot certbot-dns-google==${APKG_PKG_VER%-*}
-pipx inject -f certbot certbot-dns-linode==${APKG_PKG_VER%-*}
-pipx inject -f certbot certbot-dns-luadns==${APKG_PKG_VER%-*}
-logger "[${WHAT}] Installing certbot plugins [60%]..."
-pipx inject -f certbot certbot-dns-nsone==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-ovh==${APKG_PKG_VER%-*}
-pipx inject -f certbot certbot-dns-rfc2136==${APKG_PKG_VER%-*}
-logger "[${WHAT}] Installing certbot plugins [80%]..."
-pipx inject -f certbot certbot-dns-route53==${APKG_PKG_VER%-*}
-pipx inject -f certbot certbot-dns-sakuracloud==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-nginx==${APKG_PKG_VER%-*}
-logger "[${WHAT}] Installing certbot plugins [100%]..."
+logger "[${WHAT}] Installing certbot plugins done."
 
 
 # Crontab

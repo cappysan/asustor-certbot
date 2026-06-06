@@ -2,6 +2,7 @@
 
 Asustor APK package for Certbot, the free, open source software tool certificate generator.
 
+This package does not require docker.
 
 ## Table of contents
 1. [Installation](#installation)  

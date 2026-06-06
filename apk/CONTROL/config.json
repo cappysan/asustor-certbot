@@ -12,7 +12,7 @@
     "maintainer": "Cappysan",
     "name": "Certbot",
     "package": "cappysan-certbot",
-    "version": "5.2.2-r28",
+    "version": "5.2.2-r40",
     "developer": "ISRG",
     "website": "https://gitlab.com/cappysan/asustor/certbot"
   },
@@ -27,6 +27,23 @@
       "comment": "docker-ce start order is 65, and persistence is 60.",
       "start-order": 55,
       "stop-order": 30
+    }
+  },
+  "adm-desktop": {
+    "app": {
+      "type": "internal",
+      "js": [
+        "certbot.js"
+      ],
+      "css": [
+        "certbot.css"
+      ],
+      "module": "AS.ARC.apps.certbot.main",
+      "langTag": "CERTBOT"
+    },
+    "privilege": {
+      "accessible": "administrators",
+      "customizable": false
     }
   }
 }
