@@ -9,8 +9,8 @@ WHAT=Certbot
 
 # User
 # ====
+export APKG_USER=admin
+export APKG_GROUP=root
 export HOME=/share/Configuration/certbot
-APKG_USER=admin
-APKG_GROUP=root
 
 # vim: ft=sh

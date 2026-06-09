@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 # SPDX-License-Identifier: MIT
 #
-# "start" just means creating the "active" file, and maybe recreate the cert
-# We leave it to the crontab to renew via certbot-renew if active file is present.
-#
+# ------------------------------------------------------------------------------
 . /usr/local/AppCentral/cappysan-certbot/.env.install
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
-. ${APKG_PKG_DIR}/env
+if test -f ${APKG_PKG_DIR}/env; then
+  . ${APKG_PKG_DIR}/env
+fi
 
 # Build the link since it's not present when we install
 ln -sf -T $(realpath ./letsencrypt/bin/certbot) /usr/bin/certbot
@@ -16,6 +16,7 @@ if test ! -e /etc/letsencrypt; then
   mkdir -p ${APKG_CFG_DIR}/letsencrypt
   ln -sf -T ${APKG_CFG_DIR}/letsencrypt /etc/letsencrypt
 fi
+# ------------------------------------------------------------------------------
 
 case $1 in
   start)

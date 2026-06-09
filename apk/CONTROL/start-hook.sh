@@ -4,7 +4,9 @@
 # ------------------------------------------------------------------------------
 . /usr/local/AppCentral/cappysan-certbot/.env.install
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
-. ${APKG_PKG_DIR}/env
+if test -f ${APKG_PKG_DIR}/env; then
+  . ${APKG_PKG_DIR}/env
+fi
 
 
 # Logrotate
