@@ -2,7 +2,7 @@
 #
 ---
 # The following file enables recreating a templated output dir by executing:
-#   mk-scaffold clone "https://gitlab.com/cappysan/scaffolds/asustor-template.git" --input-file .answers.yml --output-dir output
+#   mk-scaffold clone "https://gitlab.com/cappysan/scaffolds/asustor-template" --input-file .answers.yml --output-dir output
 answers:
   - include: "~/.config/scaffold/answers.yml"
     optional: True
@@ -13,7 +13,7 @@ answers:
   - project_name: "cappysan-certbot"
   - project_slug: "cappysan-certbot"
   - project_url: "https://gitlab.com/cappysan/asustor/certbot"
-  - project_description: "Let's Encrypt certbot."
+  - project_description: "Asustor Certbot DNS application."
 
   - has_documentation: False
   - documentation_url: ""
@@ -36,23 +36,23 @@ answers:
   - template_url: "https://gitlab.com/cappysan/scaffolds/asustor-template"
   - template_version: "1.1.0-r4"
 
-  - creation_year: "2026"
-  - last_update: "2026-06-06 23:17:19"
+  - creation_year: "2025"
+  - last_update: "2026-06-09 11:57:53"
 
   - maintainer: "Cappysan"
   - developer: "Cappysan"
 
-  - app_name: "Persistence"
-  - cfg_name: "persistence"
-  - cappysan_name: "cappysan-persistence"
-  - asustor_name: "asustor-persistence"
+  - app_name: "Certbot"
+  - cfg_name: "certbot"
+  - cappysan_name: "cappysan-certbot"
+  - asustor_name: "asustor-certbot"
 
-  - apk_description: "Enable changing /etc configuration files on boot"
+  - apk_description: "Asustor Certbot DNS application"
   - has_adm_desktop: True
 
   # Items without visible questions:
   - depends: '"python3(>=3.10.0)"'
   - adm_desktop_customizable: False
-  - boot_priority_start: 60
-  - boot_priority_stop: 40
+  - boot_priority_start: 50
+  - boot_priority_stop: 30
   - has_upstream: False

@@ -9,9 +9,12 @@ APKG_CFG_DIR=/share/Configuration/certbot
 export APKG_CFG_DIR APKG_PKG_VER APKG_PKG_SHORT_VER
 env | grep APKG | grep -v APKG_PKG_STATUS \
   | grep -v " " | sort > ${APKG_PKG_DIR}/.env.install
+# ------------------------------------------------------------------------------
 
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
-. ${APKG_PKG_DIR}/env
+if test -f ${APKG_PKG_DIR}/env; then
+  . ${APKG_PKG_DIR}/env
+fi
 
 # Permissions
 # ===========
@@ -83,4 +86,6 @@ logger "[${WHAT}] Installing crontab..."
 ${APKG_PKG_DIR}/CONTROL/start-stop.sh force-restart
 
 logger "[${WHAT}] Application installed."
+
+# ------------------------------------------------------------------------------
 exit 0

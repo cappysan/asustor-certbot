@@ -5,7 +5,7 @@
       "letsencrypt"
     ],
     "depends": [
-      "python3(>=3.10.11)"
+      "python3(>=3.10.0)"
     ],
     "email": "julien@cappysan.dev",
     "firmware": "5.0.0",
@@ -13,21 +13,8 @@
     "name": "Certbot",
     "package": "cappysan-certbot",
     "version": "5.2.2-r40",
-    "developer": "ISRG",
+    "developer": "Cappysan",
     "website": "https://gitlab.com/cappysan/asustor/certbot"
-  },
-  "register": {
-    "share-folder": [
-      {
-        "name": "Configuration",
-        "description": "Application configuration"
-      }
-    ],
-    "boot-priority": {
-      "comment": "docker-ce start order is 65, and persistence is 60.",
-      "start-order": 55,
-      "stop-order": 30
-    }
   },
   "adm-desktop": {
     "app": {
@@ -44,6 +31,19 @@
     "privilege": {
       "accessible": "administrators",
       "customizable": false
+    }
+  },
+  "register": {
+    "share-folder": [
+      {
+        "name": "Configuration",
+        "description": "Application configuration"
+      }
+    ],
+    "boot-priority": {
+      "x-comment": "docker-ce start order is 65",
+      "start-order": 50,
+      "stop-order": 30
     }
   }
 }

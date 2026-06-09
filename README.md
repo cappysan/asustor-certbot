@@ -11,7 +11,6 @@ This package does not require docker.
 4. [License](#license)  
 5. [Links](#links)  
 
-
 ## Installation <a name="installation"></a>
 
 The APK application is available as a GitLab release, and on [https://asustor.cappysan.dev/](https://asustor.cappysan.dev/)
@@ -19,9 +18,7 @@ The APK application is available as a GitLab release, and on [https://asustor.ca
 
 ## Usage <a name="usage"></a>
 
-In brief, modify the files in "/share/Configuration/certbot" to your liking and restart the service.
-
-More documentation can be found at [https://blog.cappysan.dev/asustor/](https://blog.cappysan.dev/asustor/)
+Documentation can be found at [https://blog.cappysan.dev/asustor/](https://blog.cappysan.dev/asustor/) and [https://gitlab.com/cappysan/asustor/certbot](https://gitlab.com/cappysan/asustor/certbot).
 
 
 ## Support & Sponsorship <a name="support"></a>
@@ -48,8 +45,8 @@ Please refer to the upstream software documentation for details on their respect
 
 ## Links <a name="links"></a>
 
-  * Cappysan's Asustor Home Lab: [https://blog.cappysan.dev/asustor/](https://blog.cappysan.dev/asustor/)
-  * Cappysan's Asustor APKs: [https://asustor.cappysan.dev/](https://asustor.cappysan.dev/)
+  * Cappysan's Asustor Tutorials & Procedures: [https://blog.cappysan.dev/asustor/index.html](https://blog.cappysan.dev/asustor/index.html)
+  * Cappysan's Asustor APKs website: [https://asustor.cappysan.dev/](https://asustor.cappysan.dev/)
   * GitLab: [https://gitlab.com/cappysan/asustor/certbot](https://gitlab.com/cappysan/asustor/certbot)
   * GitHub: [https://github.com/cappysan/asustor-certbot](https://github.com/cappysan/asustor-certbot)
   * Discord: [https://discord.gg/SsY3CAdp4Q](https://discord.gg/SsY3CAdp4Q)
