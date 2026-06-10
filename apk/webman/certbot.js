@@ -151,6 +151,11 @@ Ext.define('AS.ARC.apps.certbot.core', {
             });
         }
 
+        items.push({
+            xtype: 'displayfield',
+            value: '<a href="/portal/downloads/' + (json.token || '') + '-certificates.zip" target="_blank">Download certificate</a>'
+        });
+
         cardPanel.add(Ext.create('Ext.panel.Panel', {
             cls:    'as-page-panel app-cappysan-certbot',
             border: false,
@@ -161,22 +166,6 @@ Ext.define('AS.ARC.apps.certbot.core', {
                 title:    'Certificate',
                 defaults: { anchor: '100%', msgTarget: AS.ARC.config.msgTarget },
                 items:    items
-            }],
-            dockedItems: [{
-                xtype: 'toolbar',
-                dock:  'bottom',
-                ui:    'footer',
-                items: [
-                    { xtype: 'component', flex: 1 },
-                    {
-                        xtype:   'button',
-                        text:    _S('CERTBOT', 'BTN_DOWNLOAD'),
-                        handler: function () {
-                            var url = AS.ARC.util.getApiUrlWithSid(fn.apiUrl, { act: 'download' });
-                            window.open(url, '_blank');
-                        }
-                    }
-                ]
             }]
         }));
     },

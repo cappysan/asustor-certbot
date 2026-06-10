@@ -63,8 +63,10 @@ case "$ACT" in
             certificate)
                 CERT=/usr/builtin/etc/certificate/ssl.crt
                 openssl x509 -in "$CERT" -noout -subject -dates > /tmp/certbot-ssl-info.txt 2>&1
+                TOKEN=$(cat "${CFG_DIR}/random" 2>/dev/null | tr -d '[:space:]')
+                export _TOKEN="$TOKEN"
                 RESULT=$("$PYTHON" - << 'PYEOF'
-import json, re
+import json, os, re
 try:
     with open('/tmp/certbot-ssl-info.txt') as f:
         raw = f.read()
@@ -77,7 +79,8 @@ def find(pattern):
 cn         = find(r'CN\s*=\s*([^,/\n]+)')
 not_before = find(r'notBefore=(.+)')
 not_after  = find(r'notAfter=(.+)')
-print(json.dumps({'success': True, 'cn': cn, 'not_before': not_before, 'not_after': not_after}))
+token      = os.environ.get('_TOKEN', '')
+print(json.dumps({'success': True, 'cn': cn, 'not_before': not_before, 'not_after': not_after, 'token': token}))
 PYEOF
 )
                 printf 'Content-Type: application/json\r\n\r\n'
@@ -155,7 +158,8 @@ PYEOF
                 OVH_APP_SECRET=$(get_param ovh_application_secret)
                 OVH_CONSUMER_KEY=$(get_param ovh_consumer_key)
                 mkdir -p "$CFG_DIR"
-                printf '%s\n' "$DOMAINS"  > "${CFG_DIR}/domains.conf"
+                DOMAINS_NORMALIZED=$(echo "$DOMAINS" | tr ' ' ',')
+                printf '%s\n' "$DOMAINS_NORMALIZED" > "${CFG_DIR}/domains.conf"
                 printf '%s\n' "$PROVIDER" > "${CFG_DIR}/provider.conf"
                 # cmdline.conf: write if non-empty, remove if empty
                 if [ -n "$CMDLINE" ]; then
@@ -186,35 +190,6 @@ PYEOF
                 respond '{"success":true}'
                 ;;
         esac
-        ;;
-
-    download)
-        PYTHON=$(find_python)
-        if [ -z "$PYTHON" ]; then
-            respond '{"success":false,"error_code":500,"error_msg":"No python interpreter found"}'
-            exit 0
-        fi
-        CERT_DIR=/usr/builtin/etc/certificate
-        "$PYTHON" - << 'PYEOF'
-import os, sys, zipfile, io
-
-cert_dir = '/usr/builtin/etc/certificate'
-files = ['certificate.json', 'chain.crt', 'ssl.crt', 'ssl.key', 'ssl.pem']
-
-buf = io.BytesIO()
-with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as zf:
-    for fname in files:
-        fpath = os.path.join(cert_dir, fname)
-        if os.path.exists(fpath):
-            zf.write(fpath, fname)
-
-data = buf.getvalue()
-sys.stdout.buffer.write(b'Content-Type: application/zip\r\n')
-sys.stdout.buffer.write(b'Content-Disposition: attachment; filename="certificate.zip"\r\n')
-sys.stdout.buffer.write(b'Content-Length: ' + str(len(data)).encode() + b'\r\n')
-sys.stdout.buffer.write(b'\r\n')
-sys.stdout.buffer.write(data)
-PYEOF
         ;;
 
     renew)
