@@ -19,9 +19,9 @@ if test ! -f ${APKG_CFG_DIR}/certificates.zip; then
 fi
 
 mkdir -p /usr/builtin/webman/portal/downloads
-rm -f /usr/builtin/webman/portal/downloads/*certificates.zip || true
+rm -f /usr/builtin/webman/portal/downloads/*-certificates.zip || true
 random=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
 
 ln -sf -T ${APKG_CFG_DIR}/certificates.zip /usr/builtin/webman/portal/downloads/${random}-certificates.zip
-echo "${random}" > ${APKG_CFG_DIR}/random
+echo "${random}" > ${APKG_PKG_DIR}/random
 exit 0

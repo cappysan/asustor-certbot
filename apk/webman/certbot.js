@@ -123,6 +123,13 @@ Ext.define('AS.ARC.apps.certbot.core', {
 
         var items = [{
             xtype:      'textfield',
+            fieldLabel: AS.ARC.util.fontToBold('Issuer'),
+            labelWidth: labelWidth,
+            readOnly:   true,
+            cls:        'persistence-readonly',
+            value:      json.issuer || ''
+        }, {
+            xtype:      'textfield',
             fieldLabel: AS.ARC.util.fontToBold('CN'),
             labelWidth: labelWidth,
             readOnly:   true,
@@ -156,6 +163,11 @@ Ext.define('AS.ARC.apps.certbot.core', {
             value: '<a href="/portal/downloads/' + (json.token || '') + '-certificates.zip" target="_blank">Download certificate</a>'
         });
 
+        items.push({
+            xtype: 'displayfield',
+            value: 'If not already the case, this certbot certificate must be configured as the default certificate in the Settings, <a href="#" onclick="AS.ARC.core.openApp(\'app-settings\', \'certificate\'); return false;">Certificate Manager</a> tab.'
+        });
+
         cardPanel.add(Ext.create('Ext.panel.Panel', {
             cls:    'as-page-panel app-cappysan-certbot',
             border: false,
@@ -178,6 +190,10 @@ Ext.define('AS.ARC.apps.certbot.core', {
         var ovhItems = [];
         if ((json.provider || 'ovh') === 'ovh') {
             ovhItems = [{
+                xtype:  'displayfield',
+                itemId: 'ovhTokenLink',
+                value:  '<a href="https://auth.eu.ovhcloud.com/api/createToken" target="_blank">Create OVH API token</a>'
+            }, {
                 xtype:      'combo',
                 fieldLabel: AS.ARC.util.fontToBold('Endpoint'),
                 labelWidth: labelWidth,
@@ -236,11 +252,6 @@ Ext.define('AS.ARC.apps.certbot.core', {
                     editable:   false,
                     value:      json.provider || 'ovh',
                     anchor:     '100%'
-                }, {
-                    xtype:  'displayfield',
-                    hidden: (json.provider || 'ovh') !== 'ovh',
-                    itemId: 'ovhTokenLink',
-                    value:  '<a href="https://auth.eu.ovhcloud.com/api/createToken" target="_blank">Create OVH API token</a>'
                 }]
             }, {
                 xtype:    'fieldset',
@@ -260,6 +271,9 @@ Ext.define('AS.ARC.apps.certbot.core', {
                     emptyText:  json.default_cmdline || '',
                     value:      json.cmdline || '',
                     anchor:     '100%'
+                }, {
+                    xtype: 'displayfield',
+                    value: '<a href="#" onclick="AS.ARC.core.openApp(\'app-systemInformation\', \'log\'); return false;">View certbot logs</a>'
                 }]
             }],
             dockedItems: [{
@@ -271,6 +285,7 @@ Ext.define('AS.ARC.apps.certbot.core', {
                     {
                         xtype:   'button',
                         text:    _S('CERTBOT', 'BTN_RENEW'),
+                        ui:      'default',
                         handler: function () { fn.renewCertificate(); }
                     },
                     {

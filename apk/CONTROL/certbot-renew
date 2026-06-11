@@ -45,3 +45,6 @@ else
   echo "${@}" >&2
   syslog --log 0 --level 1 --user SYSTEM --event "[${WHAT}] Renewing certificate: Failure"
 fi
+
+# Change the secure link
+/usr/local/AppCentral/cappysan-certbot/deps.d/certbot/renewal-hooks/post/05-download

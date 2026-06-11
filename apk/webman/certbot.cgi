@@ -62,8 +62,8 @@ case "$ACT" in
         case "$TAB" in
             certificate)
                 CERT=/usr/builtin/etc/certificate/ssl.crt
-                openssl x509 -in "$CERT" -noout -subject -dates > /tmp/certbot-ssl-info.txt 2>&1
-                TOKEN=$(cat "${CFG_DIR}/random" 2>/dev/null | tr -d '[:space:]')
+                openssl x509 -in "$CERT" -noout -subject -issuer -dates > /tmp/certbot-ssl-info.txt 2>&1
+                TOKEN=$(cat "/usr/local/AppCentral/cappysan-certbot/random" 2>/dev/null | tr -d '[:space:]')
                 export _TOKEN="$TOKEN"
                 RESULT=$("$PYTHON" - << 'PYEOF'
 import json, os, re
@@ -79,8 +79,11 @@ def find(pattern):
 cn         = find(r'CN\s*=\s*([^,/\n]+)')
 not_before = find(r'notBefore=(.+)')
 not_after  = find(r'notAfter=(.+)')
+issuer_line = find(r'issuer=(.+)')
+m2 = re.search(r'CN\s*=\s*([^,/\n]+)', issuer_line)
+issuer = m2.group(1).strip() if m2 else issuer_line
 token      = os.environ.get('_TOKEN', '')
-print(json.dumps({'success': True, 'cn': cn, 'not_before': not_before, 'not_after': not_after, 'token': token}))
+print(json.dumps({'success': True, 'issuer': issuer, 'cn': cn, 'not_before': not_before, 'not_after': not_after, 'token': token}))
 PYEOF
 )
                 printf 'Content-Type: application/json\r\n\r\n'
