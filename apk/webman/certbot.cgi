@@ -196,9 +196,7 @@ PYEOF
         ;;
 
     renew)
-        if [ -n "$APKG_PKG_DIR" ]; then
-            ${APKG_PKG_DIR}/CONTROL/start-stop.sh force-restart >> "$LOG" 2>&1 &
-        fi
+        /usr/local/AppCentral/cappysan-certbot/CONTROL/start-stop.sh restart >> "$LOG" 2>&1 &
         respond '{"success":true}'
         ;;
 

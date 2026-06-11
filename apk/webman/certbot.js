@@ -285,7 +285,7 @@ Ext.define('AS.ARC.apps.certbot.core', {
                     {
                         xtype:   'button',
                         text:    _S('CERTBOT', 'BTN_RENEW'),
-                        ui:      'default',
+                        cls:     'certbot-btn-white',
                         handler: function () { fn.renewCertificate(); }
                     },
                     {
