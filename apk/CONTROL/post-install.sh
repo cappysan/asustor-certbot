@@ -47,6 +47,7 @@ chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}/.backups
 # Configuration
 # =============
 # Don't override files that could have been user modified.
+#
 rsync -a --inplace --ignore-existing ${APKG_PKG_DIR}/conf.dist/ ${APKG_CFG_DIR}
 chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}
 
@@ -68,9 +69,7 @@ logger "[${WHAT}] Installing certbot..."
 pipx install -f certbot==${APKG_PKG_VER%-*} || exit 1
 
 logger "[${WHAT}] Installing certbot plugins..."
-pipx inject -f certbot certbot-apache==${APKG_PKG_VER%-*}
 pipx inject -f certbot certbot-dns-ovh==${APKG_PKG_VER%-*}
-pipx inject -f certbot certbot-nginx==${APKG_PKG_VER%-*}
 logger "[${WHAT}] Installing certbot plugins done."
 
 

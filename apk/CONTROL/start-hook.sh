@@ -8,28 +8,26 @@ if test -f ${APKG_PKG_DIR}/env; then
   . ${APKG_PKG_DIR}/env
 fi
 
+# To install files on installation, we need to have the variables set
+export APKG_CFG_DIR=/share/Configuration/certbot
+echo "APKG_CFG_DIR = $APKG_CFG_DIR" > /tmp/toto
 
 # Logrotate
 # =========
-# Enable logrotate
+# Enable logrotate with factory settings
 cp -f ${APKG_CFG_DIR}/deps.d/logrotate.d/* /etc/logrotate.d/
-
 
 # Renewal Hooks
 # =============
 # Copy all renewal-hooks from installed packages to Configuration folder
 mkdir -p ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/
-for as_dir in /usr/local/AppCentral/cappysan-*/deps.d/certbot/renewal-hooks/; do
-  if test -d "${as_dir}"; then
-    rsync -a --inplace ${as_dir}/ ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/
-  fi
-done
+
+# Files installation
 for as_dir in /share/Configuration/*/deps.d/certbot/renewal-hooks/; do
   if test -d "${as_dir}"; then
     rsync -a --inplace --ignore-existing ${as_dir}/ ${APKG_CFG_DIR}/letsencrypt/renewal-hooks/
   fi
 done
-
 
 # Permissions
 # ===========
