@@ -27,7 +27,7 @@ answers:
   - has_precommit_nitpick: True
 
   - license: "MIT"
-  - version: "2026.6.8-r16"
+  - version: "5.2.2-r98"
   - version_style: "semver-rev"
   - copyright_string: "Cappysan, Julien Lecomte, and contributors"
 
