@@ -22,11 +22,6 @@ fi
 chown -R root:root ${APKG_PKG_DIR}
 
 
-# User
-# ====
-useradd --system --no-create-home --home-dir ${APKG_CFG_DIR}/ --gid nogroup --shell /bin/false ${APKG_USER}
-
-
 # Configuration folder
 # ====================
 mkdir -p ${APKG_CFG_DIR}
@@ -54,8 +49,8 @@ chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}
 
 # Install
 # =======
-
 # First, install pipx application in a temporary folder
+#
 pip3 install --target ${APKG_TEMP_DIR} --force-reinstall --no-warn-script-location --progress-bar off --root-user-action=ignore --upgrade pipx || exit 1
 _OLD_PATH=${PATH}
 PATH="${APKG_TEMP_DIR}/bin:${PATH}"

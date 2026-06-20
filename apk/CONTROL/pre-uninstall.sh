@@ -7,8 +7,15 @@ if test -f ${APKG_PKG_DIR}/env; then
   . ${APKG_PKG_DIR}/env
 fi
 
-# Remove the crontab line
-crontab -l | sed '/cappysan-certbot/d' | crontab -
+# Clean
+# =====
+if test "x${APKG_PKG_STATUS}" != "xupgrade"; then
+  # Remove the crontab line
+  crontab -l | sed '/cappysan-certbot/d' | crontab -
+
+  # Remove logrotate
+  rm -f /etc/logrotate.d/cappysan-certbot
+fi
 
 # ------------------------------------------------------------------------------
 exit 0

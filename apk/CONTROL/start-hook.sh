@@ -11,10 +11,12 @@ fi
 # To install files on installation, we need to have the variables set
 export APKG_CFG_DIR=/share/Configuration/certbot
 
+
 # Logrotate
 # =========
 # Enable logrotate
 cp -f ${APKG_CFG_DIR}/deps.d/logrotate.d/* /etc/logrotate.d/
+
 
 # Renewal Hooks
 # =============
